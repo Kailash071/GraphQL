@@ -20,6 +20,24 @@ const resolvers = {
         review(_,args) {
             return db.reviews.find((review)=>review.id === args.id)
         }
+    },
+    Game: {
+        reviews(parent) {
+            return db.reviews.filter((review)=>review.game_id === parent.id)
+        }
+    },
+    Author: {
+        reviews(parent) {
+            return db.reviews.filter((review)=>review.game_id === parent.id)
+        }
+    },
+    Review: {
+        author(parent) {
+            return db.authors.find((a) => a.id === parent.author_id)
+          },
+          game(parent) {
+            return db.games.find((g) => g.id === parent.game_id)
+         }
     }
 }
 export default resolvers;
@@ -59,4 +77,46 @@ export default resolvers;
 //     "gameId": 1,
 //     "reviewId": 2,
 //     "authorId": 3
+//   }
+//############## client sample code of  realtion between game,author,review ############
+// query Author($gameId: ID!) {
+//     game(id: $gameId) {
+//       id
+//       title
+//       platform
+//       reviews {
+//         author {
+//           id
+//         }
+//       }
+//     }
+//   }
+
+//   query Query($reviewId: ID!) {
+//     review(id: $reviewId) {
+//       game {
+//         id
+//         platform
+//         reviews {
+//           author {
+//             name
+//             id
+//             reviews {
+//               author {
+//                 id
+//                 name
+//               }
+//             }
+//           }
+//         }
+//       }
+//       author {
+//         id
+//         reviews {
+//           author {
+//             id
+//           }
+//         }
+//       }
+//     }
 //   }
