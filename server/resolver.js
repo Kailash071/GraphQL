@@ -38,6 +38,31 @@ const resolvers = {
           game(parent) {
             return db.games.find((g) => g.id === parent.game_id)
          }
+    },
+    Mutation: {
+        addGame(_,args){
+            let game = {
+                ...args.game, id:Math.floor(Math.random()*10000).toString()
+            }
+            db.games.push(game)
+            return game
+        },
+        updateGame(_,args){
+            db.games = db.games.map((g) => {
+                if (g.id === args.id) {
+                  return {...g, ...args.edits}
+                }
+        
+                return g
+              })
+        
+              return db.games.find((g) => g.id === args.id)
+        },
+        deleteGame(_, args) {
+            db.games = db.games.filter((g) => g.id !== args.id)
+      
+            return db.games
+        },
     }
 }
 export default resolvers;
@@ -119,4 +144,42 @@ export default resolvers;
 //         }
 //       }
 //     }
+//   }
+
+//##################### Mutation #########################
+// mutation AddGame($game: AddGameInput!) {
+//     addGame(game: $game) {
+//       id
+//       title,
+//       platform
+//     }
+// }
+// {
+//     "game":{
+//       "title": "new Game",
+//       "platform":["hello"]
+//     }
+// }
+// mutation UpdateGame($updateGameId: ID!, $edits: EditGameInput!) {
+//     updateGame(id: $updateGameId, edits: $edits) {
+//       id
+//       platform
+//       title
+//     }
+// }
+// {  "updateGameId": "1422",
+//   "edits": {
+//     "title":"a new game",
+//     "platform":"hii"
+//   }
+// }
+// mutation DeleteGame($deleteGameId: ID!) {
+//     deleteGame(id: $deleteGameId) {
+//       id
+//       platform
+//       title
+//     }
+//   }
+//   {
+//     "deleteGameId": "1422"
 //   }
